@@ -8,15 +8,15 @@
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: #fff;
+  background-color: #000;
   color: white;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
   position: relative;
 }
 
 .product-canvas {
-  width: 80vw;
-  height: 70vh;
+  width: 100%;
+  height: 100vh;
 }
 
 .control {

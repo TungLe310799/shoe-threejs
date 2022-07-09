@@ -1,7 +1,7 @@
 import "./index.css";
 import { Suspense, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
+import { OrbitControls, useGLTF, Stars } from "@react-three/drei";
 import {
   folder,
   Leva,
@@ -15,48 +15,66 @@ import { Color } from "three";
 function Model({ ...props }) {
   const group = useRef();
   const { nodes, materials } = useGLTF("/shoe.gltf");
-  
+
+  useFrame(() => (group.current.rotation.y += 0.01));
+
   // ------USING LEVA --------
-  const [{ scale, position, Laces, Body, Sole, Stripes, SoleVisible, LacesVisible, BodyVisible }, set] = useControls(
-    "SHOE",
-    () => ({
-      scale: {
-        value: 3,
-        min: 1,
-        max: 5,
-        step: 0.2
-      },
-      position: [0,0,0],
-      color: folder({
+  const [
+    {
+      scale,
+      position,
+      Laces,
+      Body,
+      Sole,
+      Stripes,
+      SoleVisible,
+      LacesVisible,
+      BodyVisible,
+    },
+    set,
+  ] = useControls("SHOE", () => ({
+    scale: {
+      value: 3,
+      min: 1,
+      max: 5,
+      step: 0.2,
+    },
+    position: [0, 0, 0],
+    color: folder({
+      Laces: "#fff",
+      Body: "#fff",
+      Sole: "#fff",
+      Stripes: "#fff",
+    }),
+    visible: folder({
+      SoleVisible: true,
+      LacesVisible: true,
+      BodyVisible: true,
+    }),
+    reset: button(() => {
+      set({
+        scale: 3,
+        position: [0, 0, 0],
         Laces: "#fff",
         Body: "#fff",
         Sole: "#fff",
         Stripes: "#fff",
-      }),
-      visible : folder({
         SoleVisible: true,
         LacesVisible: true,
         BodyVisible: true,
-      }), 
-      reset: button(() => {
-        set({
-          scale: 3,
-          position: [0,0,0],
-          Laces: "#fff",
-          Body: "#fff",
-          Sole: "#fff",
-          Stripes: "#fff",
-          SoleVisible: true,
-          LacesVisible: true,
-          BodyVisible: true,
-        })
-      })
-    })
-  );
+      });
+    }),
+  }));
   // Display
 
   return (
-    <group ref={group} {...props} dispose={null} scale={scale} position={position}>
+    <group
+      ref={group}
+      {...props}
+      dispose={null}
+      scale={scale}
+      position={position}
+    >
       <mesh
         geometry={nodes.shoe.geometry}
         material={materials.laces}
@@ -77,7 +95,7 @@ function Model({ ...props }) {
       <mesh
         geometry={nodes.shoe_3.geometry}
         material={materials.inner}
-        material-color="#000"
+        material-color="#888"
         visible={BodyVisible}
       />
       <mesh
@@ -130,6 +148,7 @@ function App() {
                   position={[10, 15, 10]}
                   castShadow
                 />
+                <Stars />
                 <Model
                   customColors={{ mesh: mesh, stripes: stripes, soul: soul }}
                   customVisible={{ soul: displaySoul }}
@@ -142,7 +161,6 @@ function App() {
               </Suspense>
             </Canvas>
           </div>
-          
         </div>
       </div>
     </div>
