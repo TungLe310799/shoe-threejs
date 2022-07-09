@@ -35,7 +35,6 @@ function Model({ ...props }) {
       visibleSole: true,
     }),
   });
-
   return (
     <group ref={group} {...props} dispose={null} scale={scale}>
       <mesh
