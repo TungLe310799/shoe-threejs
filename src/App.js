@@ -15,38 +15,59 @@ import { Color } from "three";
 function Model({ ...props }) {
   const group = useRef();
   const { nodes, materials } = useGLTF("/shoe.gltf");
-
+  
   // ------USING LEVA --------
-  const { scale, Laces, Body, Soul, stripesColor } = useControls("SHOE", {
-    scale: 1,
-    color: folder({
-      Laces: "#fff",
-      Body: "#fff",
-      Soul: "#fff",
-      stripesColor: "#fff",
-    }),
-  });
+  const [{ scale, position, Laces, Body, Sole, Stripes, SoleVisible, LacesVisible, BodyVisible }, set] = useControls(
+    "SHOE",
+    () => ({
+      scale: {
+        value: 3,
+        min: 1,
+        max: 5,
+        step: 0.2
+      },
+      position: [0,0,0],
+      color: folder({
+        Laces: "#fff",
+        Body: "#fff",
+        Sole: "#fff",
+        Stripes: "#fff",
+      }),
+      visible : folder({
+        SoleVisible: true,
+        LacesVisible: true,
+        BodyVisible: true,
+      }), 
+      reset: button(() => {
+        set({
+          scale: 3,
+          position: [0,0,0],
+          Laces: "#fff",
+          Body: "#fff",
+          Sole: "#fff",
+          Stripes: "#fff",
+          SoleVisible: true,
+          LacesVisible: true,
+          BodyVisible: true,
+        })
+      })
+    })
+  );
+  // Display
 
-  const { visible, visibleSole } = useControls("Display", {
-    displayLaces: folder({
-      visible: true,
-    }),
-    displaySole: folder({
-      visibleSole: true,
-    }),
-  });
   return (
-    <group ref={group} {...props} dispose={null} scale={scale}>
+    <group ref={group} {...props} dispose={null} scale={scale} position={position}>
       <mesh
         geometry={nodes.shoe.geometry}
         material={materials.laces}
         material-color={Laces}
-        visible={visible}
+        visible={LacesVisible}
       />
       <mesh
         geometry={nodes.shoe_1.geometry}
         material={materials.mesh}
         material-color={Body}
+        visible={BodyVisible}
       />
       <mesh
         geometry={nodes.shoe_2.geometry}
@@ -57,28 +78,29 @@ function Model({ ...props }) {
         geometry={nodes.shoe_3.geometry}
         material={materials.inner}
         material-color="#000"
-        visible={visibleSole}
+        visible={BodyVisible}
       />
       <mesh
         geometry={nodes.shoe_4.geometry}
         material={materials.sole}
-        material-color={Soul}
-        visible={visibleSole}
+        material-color={Sole}
+        visible={SoleVisible}
       />
       <mesh
         geometry={nodes.shoe_5.geometry}
         material={materials.stripes}
-        material-color={stripesColor}
+        material-color={Stripes}
       />
       <mesh
         geometry={nodes.shoe_6.geometry}
         material={materials.band}
-        material-color={Soul}
+        material-color={Sole}
+        visible={SoleVisible}
       />
       <mesh
         geometry={nodes.shoe_7.geometry}
         material={materials.patch}
-        material-color={stripesColor}
+        material-color={Stripes}
       />
     </group>
   );
@@ -120,75 +142,7 @@ function App() {
               </Suspense>
             </Canvas>
           </div>
-          {/* <div className="control">
-            <h2>Control</h2>
-            <div className="colors">
-              <form>
-                <h3>Change color</h3>
-                <div className="item">
-                  <label for="mesh">Main</label>
-                  <input
-                    type="color"
-                    id="mesh"
-                    name="mesh"
-                    value={mesh}
-                    onChange={(e) => setMesh(e.target.value)}
-                  />
-                </div>
-                <div className="item">
-                  <label for="stripes">Stripes</label>
-                  <input
-                    type="color"
-                    id="stripes"
-                    name="stripes"
-                    value={stripes}
-                    onChange={(e) => setStripes(e.target.value)}
-                  />
-                </div>
-                <div className="item">
-                  <label for="soul">Soul</label>
-                  <input
-                    type="color"
-                    id="soul"
-                    name="soul"
-                    value={soul}
-                    onChange={(e) => setSoul(e.target.value)}
-                  />
-                </div>
-                <h3>Display</h3>
-                <div className="item">
-                  <label for="mesh">Main</label>
-                  <input
-                    type="checkbox"
-                    id="mesh"
-                    name="mesh"
-                    defaultChecked={displayMesh}
-                  />
-                </div>
-                <div className="item">
-                  <label for="stripes">Stripes</label>
-                  <input
-                    type="checkbox"
-                    id="displayStripes"
-                    name="displayStripes"
-                    defaultChecked={displayStripes}
-                  />
-                </div>
-                <div className="item">
-                  <label for="soul">Soul</label>
-                  <input
-                    type="checkbox"
-                    id="displaySoul"
-                    name="displaySoul"
-                    defaultChecked={displaySoul}
-                    onChange={(e) => {
-                      setDisplaySoul(false);
-                    }}
-                  />
-                </div>
-              </form>
-            </div>
-          </div> */}
+          
         </div>
       </div>
     </div>
