@@ -15,56 +15,56 @@ import { Color } from "three";
 function Model({ ...props }) {
   const group = useRef();
   const { nodes, materials } = useGLTF("/shoe.gltf");
-  
+
   // ------USING LEVA --------
-  const { scale, bodycolor, color2, soleColor, stripesColor } = useControls(
-    "SHOE",
-    {
-      transform: folder({
-        scale: 1,
-      }),
-      bodyColor: folder({
-        bodycolor: "#fff",
-      }),
-      laceColor: folder({
-        color2: "#fff",
-      }),
-      soleColor: folder({
-        soleColor: "#fff",
-      }),
-      stripeColor: folder({
-        stripesColor: "#fff",
-      }),
-    }
-  );
-  
+  const { scale, Laces, Body, Soul, stripesColor } = useControls("SHOE", {
+    scale: 1,
+    color: folder({
+      Laces: "#fff",
+      Body: "#fff",
+      Soul: "#fff",
+      stripesColor: "#fff",
+    }),
+  });
+
+  const { visible, visibleSole } = useControls("Display", {
+    displayLaces: folder({
+      visible: true,
+    }),
+    displaySole: folder({
+      visibleSole: true,
+    }),
+  });
 
   return (
     <group ref={group} {...props} dispose={null} scale={scale}>
       <mesh
         geometry={nodes.shoe.geometry}
         material={materials.laces}
-        material-color={color2}
+        material-color={Laces}
+        visible={visible}
       />
       <mesh
         geometry={nodes.shoe_1.geometry}
         material={materials.mesh}
-        material-color={bodycolor}
+        material-color={Body}
       />
       <mesh
         geometry={nodes.shoe_2.geometry}
         material={materials.caps}
-        material-color={color2}
+        material-color={Body}
       />
       <mesh
         geometry={nodes.shoe_3.geometry}
         material={materials.inner}
-        material-color={color2}
+        material-color="#000"
+        visible={visibleSole}
       />
       <mesh
         geometry={nodes.shoe_4.geometry}
         material={materials.sole}
-        material-color={soleColor}
+        material-color={Soul}
+        visible={visibleSole}
       />
       <mesh
         geometry={nodes.shoe_5.geometry}
@@ -74,12 +74,12 @@ function Model({ ...props }) {
       <mesh
         geometry={nodes.shoe_6.geometry}
         material={materials.band}
-        material-color={props.customColors.stripes}
+        material-color={Soul}
       />
       <mesh
         geometry={nodes.shoe_7.geometry}
         material={materials.patch}
-        material-color={soleColor}
+        material-color={stripesColor}
       />
     </group>
   );
@@ -121,7 +121,7 @@ function App() {
               </Suspense>
             </Canvas>
           </div>
-          <div className="control">
+          {/* <div className="control">
             <h2>Control</h2>
             <div className="colors">
               <form>
@@ -189,7 +189,7 @@ function App() {
                 </div>
               </form>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
